@@ -2,8 +2,9 @@
 *@author crash_man
 *@Time 2016-11-01
 */
-package com.crashman.snake;
+//package com.crashman.snake;
 import java.util.Arrays;
+import java.util.Random;
 
 public class Grid
 {
@@ -20,17 +21,23 @@ public class Grid
 	private Snake initSnake() 
 	{
 	   snake = new Snake();
-	
 	   // 设置Snake的Body
-	   
+	   snake.getBody().add(new Node(width/2-10,height/2));
+	   snake.getBody().add(new Node(width/2,height/2));
+	   snake.getBody().add(new Node(width/2+10,height/2));	   
 	   // 更新棋盘覆盖状态
-	
+	   status[width/2-1][height/2] = true;
+	   status[width/2][height/2] = true;
+	   status[width/2+1][height/2] = true;
 	   return snake;
 	}
 	public Node createFood() 
 	{
     	int x, y;
 		// 使用Random设置x和y
+		Random rand = new Random();
+		x = 10 + rand.nextInt(width-20);
+		y = 10 + rand.nextInt(height-20);
 	    food = new Node(x, y);
 	    return food;
 	}
@@ -41,9 +48,17 @@ public class Grid
 
 		status = new boolean[width][height];
 
-   		initSnake();
-   		createFood();
+   		this.snake = initSnake();
+   		this.food = createFood();
     }
+	public Node getFood()
+	{
+		return this.food;
+	}
+	public Snake getSnake()
+	{
+		return this.snake;
+	}
 	public boolean nextRound() 
 	{
 
@@ -56,12 +71,13 @@ public class Grid
         //} 
 		//更新棋盘状态并返回游戏是否结束的标志
 	//}	
+		return true;
 	}
 	public void changeDirection(Direction newDirection) 
 	{
-    	if (snakeDirection.compatibleWith(newDirection)) 
-		{
-        	snakeDirection = newDirection;
-    	}
+    	//if (snakeDirection.compatibleWith(newDirection)) 
+		//{
+        //	snakeDirection = newDirection;
+    	//}
 	}
 }

@@ -2,7 +2,7 @@
 *@author crash_man
 *@Time 2016-11-01
 */
-package com.crashman.snake;
+//package com.crashman.snake;
 
 public class Node 
 {
