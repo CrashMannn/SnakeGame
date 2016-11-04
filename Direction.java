@@ -15,4 +15,8 @@ public enum Direction
     Direction(int directionCode) {
         this.directionCode = directionCode;
     }
+	public boolean equals(Direction d)
+	{
+		return d.toString().equals(this.toString());
+	}
 }

@@ -12,11 +12,14 @@ public class SnakeApp
 	private final int WindowHeight = 200;
 	private final int snakeWidth = 10;
 	private final int foodWidth = 10;
-	Grid GameGrid = new Grid(WindowWidth,WindowHeight);
-	GameCanvas GameArea = new GameCanvas();	
-	Snake snake = GameGrid.getSnake();
-	Node food = GameGrid.getFood();
-	GameController gameController = new GameController();
+	Grid GameGrid;
+	GameCanvas GameArea;
+	GameController gameController;
+	public SnakeApp() {
+		GameGrid = new Grid(WindowWidth,WindowHeight);
+		GameArea = new GameCanvas();	
+		gameController = new GameController(GameGrid.getSnake());
+	}
 	public void init() 
 	{
         //创建游戏窗体
@@ -39,8 +42,8 @@ public class SnakeApp
 		
 		while(true)
 		{
-			Thread.sleep(500);
-			snakeApp.snake.move(snakeApp.gameController.getDirection());
+			Thread.sleep(350);
+			snakeApp.GameGrid.nextRound();	
 			snakeApp.GameArea.repaint();
 		}
     }
@@ -52,7 +55,8 @@ public class SnakeApp
 			drawFood(g);
 		}
 		private void drawSnake(Graphics g)
-		{
+		{	
+			Snake snake = GameGrid.getSnake();
 			g.setColor(new Color(220,100,80));
 			for(Node node : snake.getBody())
 			{
@@ -60,7 +64,8 @@ public class SnakeApp
 			}
 		}
 		private void drawFood(Graphics g)
-		{
+		{	
+			Node food = GameGrid.getFood();
 			g.setColor(new Color(100,100,100));
 			g.fillOval(food.getX(),food.getY(),foodWidth,foodWidth);			
 		}

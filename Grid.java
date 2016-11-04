@@ -36,8 +36,8 @@ public class Grid
     	int x, y;
 		// 使用Random设置x和y
 		Random rand = new Random();
-		x = 10 + rand.nextInt(width-20);
-		y = 10 + rand.nextInt(height-20);
+		x = 10*(1 + rand.nextInt(width/10-1));
+		y = 10*(1 + rand.nextInt(height/10-1));
 	    food = new Node(x, y);
 	    return food;
 	}
@@ -61,6 +61,14 @@ public class Grid
 	}
 	public boolean nextRound() 
 	{
+		Node lastTail;
+		lastTail = snake.move(snake.getDirection());
+		if(this.snake.eat(food)) {
+			this.snake.addTail(lastTail);
+			this.food = createFood();
+			return true;
+		}
+		return false;
 
     //按当前方向移动贪吃蛇
 
@@ -71,7 +79,6 @@ public class Grid
         //} 
 		//更新棋盘状态并返回游戏是否结束的标志
 	//}	
-		return true;
 	}
 	public void changeDirection(Direction newDirection) 
 	{
