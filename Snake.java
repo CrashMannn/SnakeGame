@@ -11,25 +11,22 @@ public class Snake
 	private Direction snakeDirection = Direction.LEFT;
 	public boolean eat(Node food) {
 		if(isLeftNeibhor(food,body.getFirst()) && snakeDirection.equals(Direction.LEFT)) {
-			addTail(food);
 			System.out.println("eat left food");
 			return true;
 		}
 		if(isRightNeibhor(food,body.getFirst()) && snakeDirection.equals(Direction.RIGHT)) {
-			addTail(food);
 			System.out.println("eat right food");
 			return true;
 		}
 		if(isUpNeibhor(food,body.getFirst()) && snakeDirection.equals(Direction.UP)) {
-			addTail(food);
 			System.out.println("eat up food");
 			return true;
 		}
 		if(isDownNeibhor(food,body.getFirst()) && snakeDirection.equals(Direction.DOWN)) {
-			addTail(food);
 			System.out.println("eat down food");
 			return true;
 		}
+		body.removeLast();
 		return false;
     }
     
@@ -70,12 +67,15 @@ public class Snake
 				break;
 			}
 		}
-		return body.removeLast();
+		return body.getLast();
     }
 
     public Node getHead() {
         return body.getFirst();
     }
+	public int getLength() {
+		return body.size();
+	}
 	public void addHead(Node head) {
 		this.body.addFirst(head);
 	}
@@ -93,5 +93,13 @@ public class Snake
 	public void setDirection(Direction d) {
 		this.snakeDirection = d;
 	}
-	
+	public boolean isEatingSelf()
+	{
+		for(int i=1;i<getLength();i++)
+		{
+			if(body.get(i).equals(getHead()))
+				return true;
+		}
+		return false;
+	}	
 }

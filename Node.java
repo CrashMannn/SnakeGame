@@ -22,5 +22,8 @@ public class Node
         return y;
     }
 
-
+	public boolean equals(Node node)
+	{
+		return (this.x == node.getX() && this.y == node.getY());
+	}
 }

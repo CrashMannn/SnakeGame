@@ -8,11 +8,12 @@ import java.util.Random;
 
 public class Grid
 {
-	public final boolean status[][];
+	private boolean status[][];
 	private final int width;
     private final int height;
 	private Node food;
     private Snake snake;
+	private int foodCount;
  	// 初始方向默认设置为向左
     private Direction snakeDirection = Direction.LEFT;
 	//贪吃蛇的长度为棋盘宽度的三分之一
@@ -26,9 +27,6 @@ public class Grid
 	   snake.getBody().add(new Node(width/2,height/2));
 	   snake.getBody().add(new Node(width/2+10,height/2));	   
 	   // 更新棋盘覆盖状态
-	   status[width/2-1][height/2] = true;
-	   status[width/2][height/2] = true;
-	   status[width/2+1][height/2] = true;
 	   return snake;
 	}
 	public Node createFood() 
@@ -36,20 +34,23 @@ public class Grid
     	int x, y;
 		// 使用Random设置x和y
 		Random rand = new Random();
-		x = 10*(1 + rand.nextInt(width/10-1));
-		y = 10*(1 + rand.nextInt(height/10-1));
-	    food = new Node(x, y);
+		do {
+			x = 10*(1 + rand.nextInt(width/10-1));
+			y = 10*(1 + rand.nextInt(height/10-1));
+		} while(status[x][y] == true);
+	    food = new Node(x, y);		
 	    return food;
 	}
     public Grid(int width, int height) {
 
         this.width = width;
         this.height = height;
-
+		foodCount = 0;
 		status = new boolean[width][height];
 
    		this.snake = initSnake();
    		this.food = createFood();
+	   	updateStatus(snake);
     }
 	public Node getFood()
 	{
@@ -59,26 +60,21 @@ public class Grid
 	{
 		return this.snake;
 	}
-	public boolean nextRound() 
+	public int getFoodCount()
+	{
+		return this.foodCount;
+	}
+	public int nextRound() 
 	{
 		Node lastTail;
 		lastTail = snake.move(snake.getDirection());
-		if(this.snake.eat(food)) {
-			this.snake.addTail(lastTail);
+		if(snake.eat(food)) 
+		{
+			this.foodCount++;
+			System.out.println("The snake has eat " + foodCount + " food.");
 			this.food = createFood();
-			return true;
 		}
-		return false;
-
-    //按当前方向移动贪吃蛇
-
-    //if (头部的位置是否有效) {
-        //if (头部原来是食物) {
-            //把原来move操作时删除的尾部添加回来
-            //创建一个新的食物
-        //} 
-		//更新棋盘状态并返回游戏是否结束的标志
-	//}	
+		return updateStatus(snake);
 	}
 	public void changeDirection(Direction newDirection) 
 	{
@@ -86,5 +82,28 @@ public class Grid
 		//{
         //	snakeDirection = newDirection;
     	//}
+	}
+	public int updateStatus(Snake snake)
+	{
+		for(Node node : snake.getBody())
+		{
+			if(outofBound(node)) 
+			{
+				System.out.println("Error : Out of Bound.");
+				return 1;
+			} 
+			else if(snake.isEatingSelf()) 
+			{
+				System.out.println("Don't eat yourself.");
+				return 2;
+			}
+			else
+				status[node.getX()/10][node.getY()/10] = true;
+		}
+		return 0;
+	}
+	public boolean outofBound(Node node)
+	{
+		return(node.getX() < 0 || node.getY() < 0 || node.getY() >= height || node.getX() >= width);
 	}
 }

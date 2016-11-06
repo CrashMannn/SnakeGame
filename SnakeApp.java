@@ -8,12 +8,13 @@ import java.awt.*;
 
 public class SnakeApp 
 {	
-	private final int WindowWidth = 300;
-	private final int WindowHeight = 200;
+	private final int WindowWidth = 600;
+	private final int WindowHeight = 400;
 	private final int snakeWidth = 10;
 	private final int foodWidth = 10;
 	Grid GameGrid;
 	GameCanvas GameArea;
+	JFrame window;
 	GameController gameController;
 	public SnakeApp() {
 		GameGrid = new Grid(WindowWidth,WindowHeight);
@@ -23,7 +24,7 @@ public class SnakeApp
 	public void init() 
 	{
         //创建游戏窗体
-        JFrame window = new JFrame("贪吃蛇游戏v0.1");
+        window = new JFrame("贪吃蛇游戏v0.1");
         // 画出棋盘和贪吃蛇
 		GameArea.setPreferredSize(new Dimension(WindowWidth,WindowHeight));
 		GameArea.repaint();
@@ -42,9 +43,28 @@ public class SnakeApp
 		
 		while(true)
 		{
-			Thread.sleep(350);
-			snakeApp.GameGrid.nextRound();	
-			snakeApp.GameArea.repaint();
+			Thread.sleep(500);
+			int nextRoundCode = snakeApp.GameGrid.nextRound();
+			if(nextRoundCode == 0)
+			{	
+				snakeApp.GameArea.repaint();
+			}
+			else
+			{
+				Dialog gameOverDialog = new Dialog(snakeApp.window,"GameOver",true);
+				Label txtLabel = new Label();
+				if(nextRoundCode == 1)
+					txtLabel.setText("Snake out of Bound. Game Over");
+				else if(nextRoundCode == 2)
+					txtLabel.setText("Don't eat youself. Game Over");
+				gameOverDialog.add(txtLabel);
+				gameOverDialog.setBounds(100,200,300,200);
+				gameOverDialog.setResizable(false);
+				gameOverDialog.setTitle("Game Over");
+				gameOverDialog.pack();
+				gameOverDialog.setVisible(true);
+				break;
+			}
 		}
     }
 	class GameCanvas extends Canvas
